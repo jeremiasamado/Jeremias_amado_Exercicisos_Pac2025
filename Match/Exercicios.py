@@ -1,7 +1,7 @@
-#Exercício 1 – Tipo de dia
-dia = input("dia da semana: ").lower()
+# 1. Tipo de dia
+dia_semana = input("Qual é o dia? ").lower()
 
-match dia:
+match dia_semana:
     case "sabado" | "domingo":
         print("fim de semana")
     case "segunda" | "terca" | "quarta" | "quinta" | "sexta":
@@ -10,67 +10,67 @@ match dia:
         print("dia inválido")
 
 
-#Exercício 2 – Classificação de nota
-nota = int(input("nota (0-100): "))
+# 2. Classificação de nota
+pontos = int(input("Nota de 0 a 100: "))
 
-match nota:
-    case n if n >= 90:
+match pontos:
+    case p if p >= 90:
         print("excelente")
-    case n if 70 <= n <= 89:
+    case p if p >= 70:
         print("bom")
-    case n if 50 <= n <= 69:
+    case p if p >= 50:
         print("suficiente")
     case _:
         print("insuficiente")
 
     
-#Exercício 3 – Tipo de pedido
-tipo = input("tipo: ").lower()
-valor = float(input("Valor: "))
+# 3. Tipo de pedido
+t = input("tipo (compra/venda): ").lower()
+v = float(input("valor em euros: "))
 
-pedido = {"tipo": tipo, "valor": valor}
+encomenda = {"tipo": t, "valor": v}
 
-match pedido:
-    case {"tipo": "compra", "valor": v}:
-        print("compra de", v, "€")
-    case {"tipo": "venda", "valor": v}:
-        print("venda de", v, "€")
+match encomenda:
+    case {"tipo": "compra", "valor": guito}:
+        print("compra de", guito, "€")
+    case {"tipo": "venda", "valor": guito}:
+        print("venda de", guito, "€")
     case _:
         print("pedido desconhecido")
 
 
-#Exercício 4 – Tipo de dado
-valor = input("valor: ")
+# 4. Tipo de dado
+dado = input("escreve qualquer coisa: ")
 
-match valor:
-    case _ if valor.isdigit():
-        print("string numérica")
-    case _:
-        print("string textual")
+if dado.isdigit():
+    print("string numérica")
+else:
+    print("string textual")
 
 
-#Exercício 5 – Análise de mensagem
-mensagem = input("mensagem: ").lower()
+# 5. Análise de mensagem
+texto_msg = input("escreve a mensagem: ").lower()
 
-match mensagem:
+match texto_msg:
     case "olá" | "bom dia":
         print("saudação")
-    case m if m.endswith("?"):
+    case _ if texto_msg.endswith("?"):
         print("pergunta")
-    case m if "tchau" in m or "adeus" in m:
+    case _ if "tchau" in texto_msg or "adeus" in texto_msg:
         print("despedida")
     case _:
         print("mensagem genérica")
 
 
-#Exercício 6 – Estado do servidor
-status = input("status: ").lower()
-tempo = int(input("tempo de resposta (ms): "))
+# 6. Estado do servidor
+# Corrigido: Agora o "lento" vem primeiro que o "ok" genérico
+situação = input("status do server: ").lower()
+tempo_ms = int(input("ms de resposta: "))
 
-servidor = {"status": status, "tempo_resposta": tempo}
+info_servidor = {"status": situação, "tempo_resposta": tempo_ms}
 
-match servidor:
-    case {"status": "ok", "tempo_resposta": t} if t > 200:
+match info_servidor:
+    case {"status": "ok", "tempo_resposta": tempo} if tempo > 200:
         print("servidor lento")
     case {"status": "ok"}:
         print("servidor ativo")
@@ -80,16 +80,16 @@ match servidor:
         print("estado desconhecido")
 
 
-#Exercício 7 – Classificação de produto
-categoria = input("Categoria: ").lower()
-preco = float(input("Preço: "))
+# 7. Classificação de produto
+qual_categoria = input("Categoria: ").lower()
+quanto_custa = float(input("Preço: "))
 
-produto = {"categoria": categoria, "preco": preco}
+item = {"categoria": qual_categoria, "preco": quanto_custa}
 
-match produto:
+match item:
     case {"categoria": "eletronico", "preco": p} if p > 1000:
         print("Produto de luxo")
-    case {"categoria": "eletronico", "preco": p}:
+    case {"categoria": "eletronico"}:
         print("Produto comum")
     case {"categoria": "alimento"}:
         print("Produto alimentar")
@@ -97,49 +97,50 @@ match produto:
         print("Categoria desconhecida")
 
 
-#Exercício 8 – Operação matemática
-operacao = input("operação: ").lower()
-n1 = float(input("número 1: "))
-n2 = float(input("número 2: "))
+# 8. Operação matemática
+fazer_o_que = input("queres somar, subtrair, multiplicar ou dividir? ").lower()
+numero1 = float(input("numero 1: "))
+numero2 = float(input("numero 2: "))
 
-match operacao:
+match fazer_o_que:
     case "soma":
-        print(n1 + n2)
+        print(numero1 + numero2)
     case "subtrai":
-        print(n1 - n2)
+        print(numero1 - numero2)
     case "multiplica":
-        print(n1 * n2)
+        print(numero1 * numero2)
     case "divide":
-        print(n1 / n2)
+        print(numero1 / numero2)
     case _:
         print("operação inválida")
 
 
-#Exercício 9 – Processamento de requisição
-metodo = input("metodo: ").upper()
-conteudo = input("Conteudo: ")
+# 9. Processamento de requisição
+tipo_metodo = input("Metodo (GET/POST): ").upper()
+oq_tem_dentro = input("Conteudo: ")
 
-req = {"metodo": metodo, "conteudo": conteudo}
+requisicao = {"metodo": tipo_metodo, "conteudo": oq_tem_dentro}
 
-match req:
+match requisicao:
     case {"metodo": "GET"}:
         print("requisição GET recebida")
-    case {"metodo": "POST", "conteudo": ""}:
+    case {"metodo": "POST", "conteudo": ""} | {"metodo": "POST", "conteudo": None}:
         print("requisição POST sem dados")
-    case {"metodo": "POST", "conteudo": c} if c != "":
+    case {"metodo": "POST"}:
         print("requisição POST com dados válidos")
     case _:
-        print("método não suportado")
+        print("metodo não suportado")
 
 
-#Exercício 10 – Pedra, Papel ou Tesoura
+# 10. Pedra, Papel ou Tesoura
 j1 = input("jogador 1: ").lower()
 j2 = input("jogador 2: ").lower()
 
-match (j1, j2):
-    case (a, b) if a == b:
-        print("empate")
-    case ("pedra", "tesoura") | ("tesoura", "papel") | ("papel", "pedra"):
-        print("jogador 1 venceu")
-    case _:
-        print("jogador 2 venceu")
+if j1 == j2:
+    print("empate")
+else:
+    match (j1, j2):
+        case ("pedra", "tesoura") | ("tesoura", "papel") | ("papel", "pedra"):
+            print("jogador 1 ganhou")
+        case _:
+            print("jogador 2 ganhou")
