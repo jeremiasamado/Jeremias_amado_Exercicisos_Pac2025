@@ -52,7 +52,7 @@ else:
 texto_msg = input("escreve a mensagem: ").lower()
 
 match texto_msg:
-    case "olá" | "bom dia":
+    case "ola" | "bom dia":
         print("saudação")
     case _ if texto_msg.endswith("?"):
         print("pergunta")
