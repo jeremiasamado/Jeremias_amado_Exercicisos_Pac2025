@@ -1,0 +1,1 @@
+#exercicio 1 - Exercício 1: Criar um dicionário simples

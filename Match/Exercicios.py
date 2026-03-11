@@ -1,4 +1,4 @@
-# 1. Tipo de dia
+# Exercicio 1 - Tipo de dia
 dia_semana = input("Qual é o dia? ").lower()
 
 match dia_semana:
@@ -10,7 +10,7 @@ match dia_semana:
         print("dia inválido")
 
 
-# 2. Classificação de nota
+# Exercicio 2 - Classificação de nota
 pontos = int(input("Nota de 0 a 100: "))
 
 match pontos:
@@ -24,7 +24,7 @@ match pontos:
         print("insuficiente")
 
     
-# 3. Tipo de pedido
+# Exercicio 3 - Tipo de pedido
 t = input("tipo (compra/venda): ").lower()
 v = float(input("valor em euros: "))
 
@@ -39,7 +39,7 @@ match encomenda:
         print("pedido desconhecido")
 
 
-# 4. Tipo de dado
+# Exercicio 4 - Tipo de dado
 dado = input("escreve qualquer coisa: ")
 
 if dado.isdigit():
@@ -48,7 +48,7 @@ else:
     print("string textual")
 
 
-# 5. Análise de mensagem
+# Exercicio 5 - Análise de mensagem
 texto_msg = input("escreve a mensagem: ").lower()
 
 match texto_msg:
@@ -62,7 +62,7 @@ match texto_msg:
         print("mensagem genérica")
 
 
-# 6. Estado do servidor
+# Exercicio 6 - Estado do servidor
 # Corrigido: Agora o "lento" vem primeiro que o "ok" genérico
 situação = input("status do server: ").lower()
 tempo_ms = int(input("ms de resposta: "))
@@ -80,7 +80,7 @@ match info_servidor:
         print("estado desconhecido")
 
 
-# 7. Classificação de produto
+# Exercicio 7 - Classificação de produto
 qual_categoria = input("Categoria: ").lower()
 quanto_custa = float(input("Preço: "))
 
@@ -97,7 +97,7 @@ match item:
         print("Categoria desconhecida")
 
 
-# 8. Operação matemática
+# Exercicio 8 - Operação matemática
 fazer_o_que = input("queres somar, subtrair, multiplicar ou dividir? ").lower()
 numero1 = float(input("numero 1: "))
 numero2 = float(input("numero 2: "))
@@ -115,7 +115,7 @@ match fazer_o_que:
         print("operação inválida")
 
 
-# 9. Processamento de requisição
+# Exercicio 9 - Processamento de requisição
 tipo_metodo = input("Metodo (GET/POST): ").upper()
 oq_tem_dentro = input("Conteudo: ")
 
@@ -132,7 +132,7 @@ match requisicao:
         print("metodo não suportado")
 
 
-# 10. Pedra, Papel ou Tesoura
+# Exercicio 10 - Pedra, Papel ou Tesoura
 j1 = input("jogador 1: ").lower()
 j2 = input("jogador 2: ").lower()
 
