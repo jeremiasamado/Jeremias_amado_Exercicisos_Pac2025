@@ -32,9 +32,9 @@ encomenda = {"tipo": t, "valor": v}
 
 match encomenda:
     case {"tipo": "compra", "valor": guito}:
-        print("compra de", guito, "€")
+        print("compra de " + str(guito) + " euros")
     case {"tipo": "venda", "valor": guito}:
-        print("venda de", guito, "€")
+        print("venda de " + str(guito) + " euros")
     case _:
         print("pedido desconhecido")
 
@@ -63,11 +63,11 @@ match texto_msg:
 
 
 # Exercicio 6 - Estado do servidor
-# Corrigido: Agora o "lento" vem primeiro que o "ok" genérico
-situação = input("status do server: ").lower()
+# tempo_ms > 200ms lento
+situacao = input("status do server: ").lower()
 tempo_ms = int(input("ms de resposta: "))
 
-info_servidor = {"status": situação, "tempo_resposta": tempo_ms}
+info_servidor = {"status": situacao, "tempo_resposta": tempo_ms}
 
 match info_servidor:
     case {"status": "ok", "tempo_resposta": tempo} if tempo > 200:
@@ -119,17 +119,15 @@ match fazer_o_que:
 tipo_metodo = input("Metodo (GET/POST): ").upper()
 oq_tem_dentro = input("Conteudo: ")
 
-requisicao = {"metodo": tipo_metodo, "conteudo": oq_tem_dentro}
-
-match requisicao:
-    case {"metodo": "GET"}:
-        print("requisição GET recebida")
-    case {"metodo": "POST", "conteudo": ""} | {"metodo": "POST", "conteudo": None}:
+if tipo_metodo == "GET":
+    print("requisição GET recebida")
+elif tipo_metodo == "POST":
+    if oq_tem_dentro == "":
         print("requisição POST sem dados")
-    case {"metodo": "POST"}:
+    else:
         print("requisição POST com dados válidos")
-    case _:
-        print("metodo não suportado")
+else:
+    print("metodo não suportado")
 
 
 # Exercicio 10 - Pedra, Papel ou Tesoura
