@@ -40,6 +40,8 @@ def exercicio_4():
     for i in range(1, numero + 1):
         if numero % i == 0:
             divisores = divisores + 1
+        if divisores > 2:
+            break
 
     if divisores == 2:
         print(numero, "e um numero primo")
