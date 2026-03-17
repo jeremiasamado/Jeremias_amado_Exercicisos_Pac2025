@@ -129,7 +129,7 @@ guardar_notas = []
 for x in range(10):
     nota_lida = float(input("Diz a nota: "))
     guardar_notas.append(nota_lida)
-    total_soma = total_soma + nota_lida
+    total_soma += nota_lida
 
 m_final = total_soma / 10
 print("media das notas:", m_final)
@@ -157,7 +157,7 @@ elif mês_escolhido == 9: print("setembro")
 elif mês_escolhido == 10: print("outubro")
 elif mês_escolhido == 11: print("novembro")
 elif mês_escolhido == 12: print("dezembro")
-else: print("numero nao esta correto")
+else: print("Invalido")
 
 
 # Exercício Loop - Pares e Ímpares
@@ -167,7 +167,7 @@ i = 0
 for contador in range(10):
     val = int(input("escreve um numero: "))
     if val % 2 == 0:
-        p = p + 1
+        p += 1
     else:
         i = i + 1
 
