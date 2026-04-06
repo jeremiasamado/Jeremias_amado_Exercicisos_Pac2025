@@ -1,4 +1,4 @@
-# config do servidor de chat - lab01
+# config do servidor 
 
 HOST = '127.0.0.1'
 PORT = 5555
