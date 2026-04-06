@@ -117,6 +117,6 @@ Cria 5 clientes em simultaneo. Cada um envia 3 mensagens (1 normal + 2 com dados
 
 ---
 
-## Autor
+## Aluno
 
-Jeremias Amado — Lab01 — Abril 2026
+Jeremias Amado — Lab01 
