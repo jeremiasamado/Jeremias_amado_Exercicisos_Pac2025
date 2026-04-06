@@ -1,4 +1,4 @@
-# config do servidor 
+# configuracoes gerais do projeto
 
 HOST = '127.0.0.1'
 PORT = 5555

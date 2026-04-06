@@ -18,34 +18,31 @@ class ChatServer:
 
     def __init__(self):
         self.srv = None
-        self.clientes = []  # lista de tuplos (socket, username)
-        self.lock = threading.Lock()
+        self.clientes = []  # lista de (socket, username)
+        self.lock = threading.Lock()  # para nao ter problemas com as threads
         self.ativo = True
 
     def start(self):
         self.srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # SO_REUSEADDR evita o "address already in use" ao reiniciar
         self.srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
+        self.srv.bind((HOST, PORT))
+        self.srv.listen(MAX_CLIENTS)
+        logger.info(f"servidor a correr em {HOST}:{PORT}")
+
         try:
-            self.srv.bind((HOST, PORT))
-            self.srv.listen(MAX_CLIENTS)
-            logger.info(f"servidor a correr em {HOST}:{PORT}")
-
             while self.ativo:
-                try:
-                    sock, addr = self.srv.accept()
-                    logger.info(f"nova ligacao de {addr}")
+                sock, addr = self.srv.accept()
+                logger.info(f"novo cliente de {addr}")
 
-                    t = threading.Thread(target=self.tratar_cliente, args=(sock, addr))
-                    t.daemon = True
-                    t.start()
-
-                except Exception as e:
-                    if self.ativo:
-                        logger.error(f"erro ao aceitar ligacao: {e}")
+                # criar thread para cada cliente novo
+                t = threading.Thread(target=self.tratar_cliente, args=(sock, addr))
+                t.daemon = True
+                t.start()
 
         except KeyboardInterrupt:
-            logger.info("ctrl+c detetado, a fechar...")
+            logger.info("a fechar servidor...")
         finally:
             self.parar()
 
@@ -53,81 +50,89 @@ class ChatServer:
         username = None
 
         try:
+            # pedir username ao cliente
             sock.send(b"Username: ")
             username = sock.recv(BUFFER_SIZE).decode('utf-8').strip()
 
             if not username:
                 username = f"user_{addr[1]}"
 
+            # adicionar cliente a lista (com lock para ser thread-safe)
             with self.lock:
                 self.clientes.append((sock, username))
 
-            logger.info(f"[CONECTADO] {username} - {addr}")
+            logger.info(f"[CONECTADO] {username} {addr}")
+
+            # avisar os outros que entrou alguem
             self.broadcast(f"[SISTEMA] {username} entrou no chat", excluir=sock)
             sock.send(f"[SISTEMA] Bem-vindo {username}!\n".encode('utf-8'))
 
+            # loop principal - receber mensagens
             while True:
                 dados = sock.recv(BUFFER_SIZE).decode('utf-8').strip()
 
                 if not dados:
                     break
 
-                # antes de enviar verificar se tem dados pessoais
+                # verificar GDPR antes de fazer broadcast
                 if has_personal_data(dados):
                     det = detect_personal_data(dados)
-                    logger.warning(f"[BLOQUEADO] {username} tentou enviar dados pessoais: {list(det.keys())}")
+                    logger.warning(f"[BLOQUEADO] {username} - dados: {list(det.keys())}")
                     log_incident(username, dados, det)
                     sock.send(b"[AVISO] Mensagem bloqueada - contem dados pessoais\n")
                     continue
 
+                # mensagem privada comeca com @
                 if dados.startswith('@'):
                     self.privada(username, dados)
                 else:
                     self.broadcast(f"{username}: {dados}", excluir=sock)
 
         except Exception as e:
-            logger.error(f"erro com cliente {addr}: {e}")
+            logger.error(f"erro com {addr}: {e}")
 
         finally:
+            # remover da lista quando desliga
             with self.lock:
                 self.clientes = [(s, u) for s, u in self.clientes if s != sock]
+
             sock.close()
-            logger.info(f"[DESCONECTADO] {username} - {addr}")
+            logger.info(f"[DESCONECTADO] {username} {addr}")
+
             if username:
                 self.broadcast(f"[SISTEMA] {username} saiu do chat")
 
     def privada(self, remetente, msg):
-        # formato: @destino mensagem
+        # formato esperado: @username mensagem
         partes = msg.split(maxsplit=2)
+
         if len(partes) < 3:
             return
 
-        dest = partes[0][1:]
+        destino = partes[0][1:]  # tirar o @
         texto = partes[2]
 
-        alvo = None
+        sock_destino = None
         with self.lock:
             for s, u in self.clientes:
-                if u == dest:
-                    alvo = s
+                if u == destino:
+                    sock_destino = s
                     break
 
-        if alvo:
-            try:
-                alvo.send(f"[PRIVADO de {remetente}] {texto}\n".encode('utf-8'))
-                logger.info(f"privada: {remetente} -> {dest}")
-            except:
-                pass
+        if sock_destino:
+            sock_destino.send(f"[PRIVADO de {remetente}] {texto}\n".encode('utf-8'))
+            logger.info(f"msg privada: {remetente} -> {destino}")
         else:
-            logger.warning(f"utilizador {dest} nao encontrado para msg privada")
+            logger.warning(f"utilizador '{destino}' nao esta ligado")
 
     def broadcast(self, msg, excluir=None):
-        b = f"{msg}\n".encode('utf-8')
+        # enviar para todos os clientes exceto o remetente
+        msg_bytes = f"{msg}\n".encode('utf-8')
         with self.lock:
             for s, _ in self.clientes:
                 if s != excluir:
                     try:
-                        s.send(b)
+                        s.send(msg_bytes)
                     except:
                         pass
 

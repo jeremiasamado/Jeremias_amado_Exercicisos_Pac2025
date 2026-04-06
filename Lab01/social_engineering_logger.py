@@ -13,45 +13,59 @@ logger = logging.getLogger(__name__)
 
 
 def log_incident(username, mensagem, dados_detetados):
-    try:
-        tipos = list(dados_detetados.keys())
+    # guarda o incidente no ficheiro json
+    # se o ficheiro nao existir cria um novo com lista vazia
 
-        novo = {
+    try:
+        tipos_encontrados = list(dados_detetados.keys())
+
+        incidente = {
             'timestamp': datetime.now().isoformat(),
             'username': username,
             'original_message': mensagem[:500],
-            'detected_data_types': tipos
+            'detected_data_types': tipos_encontrados
         }
 
-        # ler o que ja existe no ficheiro
+        # tentar ler incidentes ja existentes
         try:
             with open(INCIDENTS_FILE, 'r') as f:
                 lista = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError):
+        except FileNotFoundError:
+            lista = []
+        except json.JSONDecodeError:
+            # ficheiro existe mas esta corrompido ou vazio
             lista = []
 
-        lista.append(novo)
+        lista.append(incidente)
 
         with open(INCIDENTS_FILE, 'w') as f:
             json.dump(lista, f, indent=2, ensure_ascii=False)
 
-        logger.info(f"incidente guardado - {username}: {tipos}")
+        logger.info(f"incidente guardado para {username} - {tipos_encontrados}")
         return True
 
     except Exception as e:
-        logger.error(f"erro ao guardar: {e}")
+        logger.error(f"nao conseguiu guardar incidente: {e}")
         return False
 
 
 def get_incidents_by_user(username):
+    # devolve lista de incidentes de um utilizador especifico
     try:
         with open(INCIDENTS_FILE, 'r') as f:
             lista = json.load(f)
-        return [x for x in lista if x['username'] == username]
+
+        resultado = []
+        for item in lista:
+            if item['username'] == username:
+                resultado.append(item)
+
+        return resultado
+
     except FileNotFoundError:
         return []
     except Exception as e:
-        logger.error(f"erro: {e}")
+        logger.error(f"erro ao ler incidents: {e}")
         return []
 
 

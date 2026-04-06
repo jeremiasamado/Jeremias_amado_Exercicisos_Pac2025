@@ -22,23 +22,24 @@ class ChatClient:
         try:
             self.sock.connect((HOST, PORT))
             self.conectado = True
-            print(f"ligado a {HOST}:{PORT}")
+            print(f"ligado ao servidor {HOST}:{PORT}")
 
-            # servidor pede username logo ao ligar
+            # servidor manda logo um prompt a pedir username
             prompt = self.sock.recv(BUFFER_SIZE).decode('utf-8')
             print(prompt, end='')
             self.sock.send(self.username.encode('utf-8'))
 
-            # thread separada so para receber
+            # thread so para receber - senao o input bloqueava tudo
             t = threading.Thread(target=self.receber, daemon=True)
             t.start()
 
+            # envio fica na thread principal
             self.enviar()
 
         except ConnectionRefusedError:
-            print(f"nao conseguiu ligar - servidor esta a correr?")
+            print("nao conseguiu ligar. o servidor esta a correr?")
         except Exception as e:
-            print(f"erro: {e}")
+            print(f"erro ao ligar: {e}")
         finally:
             self.desligar()
 
@@ -63,6 +64,7 @@ class ChatClient:
             self.conectado = False
 
     def receber(self):
+        # esta thread corre em background e imprime as mensagens que chegam
         try:
             while self.conectado:
                 dados = self.sock.recv(BUFFER_SIZE).decode('utf-8')
@@ -72,6 +74,7 @@ class ChatClient:
                     self.conectado = False
                     break
 
+                # as vezes chegam varias mensagens juntas no mesmo recv
                 for linha in dados.strip().split('\n'):
                     if linha:
                         self.mostrar(linha)
@@ -84,8 +87,8 @@ class ChatClient:
     def mostrar(self, msg):
         hora = datetime.now().strftime('%H:%M:%S')
 
-        # avisos de bloqueio ficam mais destacados
         if 'AVISO' in msg and 'bloqueada' in msg.lower():
+            # destacar avisos de bloqueio gdpr
             print(f"\n[{hora}] !! {msg}")
         else:
             print(f"\n[{hora}] {msg}")
