@@ -8,7 +8,7 @@ EMAIL_PATTERN = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
 # telefones - formato portugues e internacional
 PHONE_PATTERN = r'(\+351\s?9\d{8}|00351\s?9\d{8}|9\d{8}|\+\d{1,3}\s?\d{6,10})'
 
-# ipv4 tipo 192.168.x.x etc
+# ipv4 tipo 192.168.x.x 
 IP_ADDRESS_PATTERN = r'(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
 
 # nome completo = 2+ palavras que comecam com maiuscula
