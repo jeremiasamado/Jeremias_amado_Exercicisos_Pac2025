@@ -1,75 +1,72 @@
 import re
 
-# regex para detetar dados pessoais
+# padroes para detetar dados pessoais nas mensagens
 
 EMAIL_PATTERN = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
 
-# telefones portugueses e internacionais
+# numeros pt e tambem internacionais com +
 PHONE_PATTERN = r'(\+351\s?9\d{8}|00351\s?9\d{8}|9\d{8}|\+\d{1,3}\s?\d{6,10})'
 
-# ipv4 basico
 IP_ADDRESS_PATTERN = r'(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
 
-# nome completo - duas ou mais palavras com maiuscula
+# duas ou mais palavras com letra grande = nome proprio
 FULL_NAME_PATTERN = r'\b[A-Z][a-z]+(?:\s[A-Z][a-z]+)+\b'
 
-# formato DD/MM/YYYY ou YYYY-MM-DD
 BIRTH_DATE_PATTERN = r'(?:\d{2}/\d{2}/\d{4}|\d{4}-\d{2}-\d{2})'
 
-# cartao de credito 16 digitos
+# 16 digitos com ou sem espacos
 CREDIT_CARD_PATTERN = r'\b(?:\d{4}\s?){3}\d{4}\b|\b\d{16}\b'
 
 
-def _check_luhn(numero):
-    # validar cartao com algoritmo de luhn
-    if not numero.isdigit() or len(numero) != 16:
+def _check_luhn(n):
+    # algoritmo de luhn para validar cartao
+    if not n.isdigit() or len(n) != 16:
         return False
 
-    digits = [int(d) for d in numero]
+    nums = [int(x) for x in n]
 
-    for i in range(0, len(digits), 2):
-        digits[i] *= 2
-        if digits[i] > 9:
-            digits[i] -= 9
+    # multiplicar posicoes pares por 2
+    for i in range(0, len(nums), 2):
+        nums[i] *= 2
+        if nums[i] > 9:
+            nums[i] -= 9
 
-    return sum(digits) % 10 == 0
+    return sum(nums) % 10 == 0
 
 
 def detect_personal_data(msg):
-    encontrado = {}
+    resultado = {}
 
     emails = re.findall(EMAIL_PATTERN, msg)
     if emails:
-        encontrado['email'] = emails
+        resultado['email'] = emails
 
-    phones = re.findall(PHONE_PATTERN, msg)
-    if phones:
-        encontrado['phone'] = phones
+    tels = re.findall(PHONE_PATTERN, msg)
+    if tels:
+        resultado['phone'] = tels
 
     ips = re.findall(IP_ADDRESS_PATTERN, msg)
     if ips:
-        encontrado['ip_address'] = ips
+        resultado['ip_address'] = ips
 
     nomes = re.findall(FULL_NAME_PATTERN, msg)
     if nomes:
-        encontrado['full_name'] = nomes
+        resultado['full_name'] = nomes
 
     datas = re.findall(BIRTH_DATE_PATTERN, msg)
     if datas:
-        encontrado['birth_date'] = datas
+        resultado['birth_date'] = datas
 
-    # verificar cartoes com luhn
     cartoes = re.findall(CREDIT_CARD_PATTERN, msg)
     validos = []
     for c in cartoes:
-        c_limpo = c.replace(' ', '')
-        if _check_luhn(c_limpo):
+        sem_espacos = c.replace(' ', '')
+        if _check_luhn(sem_espacos):
             validos.append(c)
-
     if validos:
-        encontrado['credit_card'] = validos
+        resultado['credit_card'] = validos
 
-    return encontrado
+    return resultado
 
 
 def has_personal_data(msg):

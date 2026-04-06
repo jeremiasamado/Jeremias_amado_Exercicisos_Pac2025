@@ -1,4 +1,5 @@
-#server
+# config do servidor de chat - lab01
+
 HOST = '127.0.0.1'
 PORT = 5555
 BUFFER_SIZE = 1024

@@ -1,5 +1,4 @@
 import json
-import os
 import logging
 from datetime import datetime
 
@@ -17,30 +16,30 @@ def log_incident(username, mensagem, dados_detetados):
     try:
         tipos = list(dados_detetados.keys())
 
-        incidente = {
+        novo = {
             'timestamp': datetime.now().isoformat(),
             'username': username,
             'original_message': mensagem[:500],
             'detected_data_types': tipos
         }
 
-        # ler ficheiro existente ou comecar do zero
+        # ler o que ja existe no ficheiro
         try:
             with open(INCIDENTS_FILE, 'r') as f:
                 lista = json.load(f)
         except (FileNotFoundError, json.JSONDecodeError):
             lista = []
 
-        lista.append(incidente)
+        lista.append(novo)
 
         with open(INCIDENTS_FILE, 'w') as f:
             json.dump(lista, f, indent=2, ensure_ascii=False)
 
-        logger.info(f"Incidente guardado para {username}: {tipos}")
+        logger.info(f"incidente guardado - {username}: {tipos}")
         return True
 
     except Exception as e:
-        logger.error(f"Erro ao guardar incidente: {e}")
+        logger.error(f"erro ao guardar: {e}")
         return False
 
 
@@ -48,13 +47,11 @@ def get_incidents_by_user(username):
     try:
         with open(INCIDENTS_FILE, 'r') as f:
             lista = json.load(f)
-
-        return [i for i in lista if i['username'] == username]
-
+        return [x for x in lista if x['username'] == username]
     except FileNotFoundError:
         return []
     except Exception as e:
-        logger.error(f"Erro: {e}")
+        logger.error(f"erro: {e}")
         return []
 
 
@@ -65,5 +62,5 @@ def get_all_incidents():
     except FileNotFoundError:
         return []
     except Exception as e:
-        logger.error(f"Erro: {e}")
+        logger.error(f"erro: {e}")
         return []

@@ -1,15 +1,15 @@
 # Lab01 - Chat com detecao GDPR
 
-Sistema de chat em Python com suporte a varios utilizadores em simultaneo. O servidor deteta dados pessoais nas mensagens e bloqueia as que tiverem informacao errada.
+Sistema de chat em Python com suporte a varios utilizadores em simultaneo. O servidor deteta dados pessoais nas mensagens e bloqueia as que tiverem informacao sensivel (gdpr).
 
 ---
 
 ## O que faz
 
-- Chat em tempo real com varios clientes ligados ao mesmo servidor
-- Deteta e bloqueia mensagens com dados pessoais (emails, telefones, IPs, etc)
-- Mensagens privadas com @username
-- Guarda os incidentes num ficheiro JSON
+- chat em tempo real com varios clientes ao mesmo tempo
+- deteta e bloqueia mensagens com dados pessoais (emails, telefones, IPs, etc)
+- mensagens privadas com @username
+- guarda os incidentes num ficheiro JSON para analise
 
 ---
 
@@ -17,13 +17,13 @@ Sistema de chat em Python com suporte a varios utilizadores em simultaneo. O ser
 
 ```
 Lab01/
-  config.py                    - host, porta e outras constantes
+  config.py                    - host, porta e constantes
   gdpr_detector.py             - detecao de dados pessoais com regex
-  social_engineering_logger.py - guarda incidentes em JSON
-  server.py                    - servidor TCP
+  social_engineering_logger.py - registo de incidentes em JSON
+  server.py                    - servidor TCP multi-cliente
   client.py                    - cliente de chat
   test_stress.py               - teste com 5 clientes em simultaneo
-  incidents.json               - criado automaticamente quando ha incidentes
+  incidents.json               - criado automaticamente
   README.md
 ```
 
@@ -31,40 +31,40 @@ Lab01/
 
 ## Como correr
 
-Precisa de Python 3.7 ou superior. Nao e necessario instalar nada.
+Python 3.7 ou superior, sem instalar nada extra.
 
-**Terminal 1 - servidor:**
+**1. iniciar o servidor (terminal 1):**
 ```
 python server.py
 ```
 
-**Terminal 2 (e seguintes) - cliente:**
+**2. iniciar cliente (terminal 2, 3, etc):**
 ```
 python client.py
 ```
 
-O cliente pede um username e depois pode comecar a enviar mensagens.
+pede username e ja pode enviar mensagens.
 
-Para sair escrever `exit`.
-
-Para mensagem privada: `@username mensagem`
+comandos disponiveis:
+- `exit` para sair
+- `@username mensagem` para mensagem privada
 
 ---
 
-## Detecao de dados pessoais
+## Detecao GDPR
 
-O modulo `gdpr_detector.py` usa expressoes regulares para detetar:
+o `gdpr_detector.py` usa regex para encontrar:
 
-- Emails
-- Numeros de telefone (PT e internacional)
-- Enderecos IPv4
-- Nomes completos (duas ou mais palavras com maiuscula)
-- Datas de nascimento (DD/MM/YYYY ou YYYY-MM-DD)
-- Cartoes de credito (16 digitos, validados com algoritmo de Luhn)
+- emails
+- numeros de telefone PT e internacionais
+- enderecos IPv4
+- nomes proprios (duas ou mais palavras com maiuscula)
+- datas de nascimento (DD/MM/YYYY ou YYYY-MM-DD)
+- cartoes de credito com 16 digitos (validados pelo algoritmo de Luhn)
 
-Se uma mensagem tiver algum destes dados o servidor bloqueia-a e avisa o cliente. O incidente fica guardado em `incidents.json`.
+quando encontra algum destes dados a mensagem e bloqueada e o cliente recebe um aviso. o incidente fica guardado no ficheiro JSON.
 
-Exemplo:
+exemplo:
 ```
 > o meu email e joao@gmail.com
 [15:32:10] !! [AVISO] Mensagem bloqueada - contem dados pessoais
@@ -72,11 +72,10 @@ Exemplo:
 
 ---
 
-## Ficheiro de incidentes
+## Incidentes
 
-Cada vez que uma mensagem e bloqueada fica registada em `incidents.json`:
+cada bloqueio fica registado em `incidents.json`:
 
-exemplo: 
 ```json
 [
   {
@@ -88,7 +87,7 @@ exemplo:
 ]
 ```
 
-Para ver incidentes de um utilizador especifico:
+para ver incidentes de um user especifico:
 
 ```python
 from social_engineering_logger import get_incidents_by_user
@@ -99,24 +98,24 @@ print(get_incidents_by_user('joao'))
 
 ## Teste de stress
 
-Com o servidor a correr, abrir outro terminal:
+com o servidor a correr:
 
 ```
 python test_stress.py
 ```
 
-Cria 5 clientes em simultaneo, cada um envia 3 mensagens (1 normal + 2 com dados pessoais). No final mostra quantas foram bloqueadas.
+liga 5 clientes ao mesmo tempo, cada um envia 3 mensagens (1 normal + 2 com dados pessoais) e no final mostra o relatorio de bloqueios.
 
 ---
 
-## Problemas comuns
+## Erros frequentes
 
-`Address already in use` - ja ha um servidor a correr, fechar o outro terminal ou mudar a porta em config.py
+**Address already in use** - ja ha um servidor na porta 5555, fechar o outro terminal ou mudar o PORT no config.py
 
-`Connection refused` - o servidor nao esta a correr, iniciar primeiro com `python server.py`
+**Connection refused** - servidor nao esta a correr, fazer primeiro `python server.py`
 
 ---
 
-## Autore
+## Aluno
 
-- Jeremias Amado Lab01 
+Jeremias Amado - Lab01 

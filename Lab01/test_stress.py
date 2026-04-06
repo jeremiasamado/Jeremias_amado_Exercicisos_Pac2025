@@ -11,52 +11,52 @@ class ClienteTeste(threading.Thread):
         super().__init__(daemon=True)
         self.cid = cid
         self.username = f"teste_{cid}"
-        self.socket = None
+        self.sock = None
         self.bloqueadas = 0
         self.enviadas = 0
 
     def run(self):
         try:
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.connect((HOST, PORT))
-            self.socket.settimeout(3)
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.sock.connect((HOST, PORT))
+            self.sock.settimeout(3)
 
-            print(f"[cliente {self.cid}] conectado")
+            print(f"[{self.cid}] conectado")
 
-            self.socket.recv(BUFFER_SIZE)  # prompt username
-            self.socket.send(self.username.encode('utf-8'))
-            self.socket.recv(BUFFER_SIZE)  # boas vindas
+            self.sock.recv(BUFFER_SIZE)  # prompt do username
+            self.sock.send(self.username.encode('utf-8'))
+            self.sock.recv(BUFFER_SIZE)  # mensagem de boas vindas
 
-            # mensagem normal
-            self.mandar("Ola a todos")
+            # mensagem normal - nao deve ser bloqueada
+            self.mandar("ola a todos")
 
-            # email - deve ser bloqueado
-            self.mandar(f"o meu email e teste{self.cid}@mail.com")
+            # com email - deve ser bloqueada
+            self.mandar(f"email: teste{self.cid}@mail.com")
 
-            # telefone - deve ser bloqueado
-            self.mandar("liguem para 912345678")
+            # com telefone - deve ser bloqueada
+            self.mandar("tel: 912345678")
 
             time.sleep(2)
             self.ler_respostas()
-            self.socket.close()
+            self.sock.close()
 
-            print(f"[cliente {self.cid}] fim - enviadas:{self.enviadas} bloqueadas:{self.bloqueadas}")
+            print(f"[{self.cid}] terminado - ok:{self.enviadas - self.bloqueadas} bloq:{self.bloqueadas}")
 
         except Exception as e:
-            print(f"[cliente {self.cid}] erro: {e}")
+            print(f"[{self.cid}] erro: {e}")
 
     def mandar(self, msg):
         try:
-            self.socket.send(msg.encode('utf-8'))
+            self.sock.send(msg.encode('utf-8'))
             self.enviadas += 1
             time.sleep(0.3)
         except Exception as e:
-            print(f"[cliente {self.cid}] erro envio: {e}")
+            print(f"[{self.cid}] erro envio: {e}")
 
     def ler_respostas(self):
         try:
             while True:
-                dados = self.socket.recv(BUFFER_SIZE).decode('utf-8')
+                dados = self.sock.recv(BUFFER_SIZE).decode('utf-8')
                 if not dados:
                     break
                 if 'AVISO' in dados and 'bloqueada' in dados.lower():
@@ -68,10 +68,9 @@ class ClienteTeste(threading.Thread):
 
 
 def correr_teste(n=5):
-    print(f"\n{'='*50}")
-    print(f"STRESS TEST - {n} clientes")
-    print(f"Servidor: {HOST}:{PORT}")
-    print(f"{'='*50}\n")
+    print(f"\n{'='*45}")
+    print(f"stress test com {n} clientes - {HOST}:{PORT}")
+    print(f"{'='*45}\n")
 
     clientes = []
     for i in range(n):
@@ -86,19 +85,18 @@ def correr_teste(n=5):
     total_bloq = sum(c.bloqueadas for c in clientes)
     total_env = sum(c.enviadas for c in clientes)
 
-    print(f"\n{'='*50}")
-    print("RESULTADO FINAL")
-    print(f"{'='*50}")
+    print(f"\n{'='*45}")
+    print("resultado:")
     for c in clientes:
-        print(f"cliente {c.cid}: enviadas={c.enviadas} bloqueadas={c.bloqueadas}")
+        print(f"  cliente {c.cid}: enviadas={c.enviadas} bloqueadas={c.bloqueadas}")
 
-    print(f"\nTotal enviadas: {total_env}")
-    print(f"Total bloqueadas: {total_bloq}")
+    print(f"\n  total enviadas:  {total_env}")
+    print(f"  total bloqueadas: {total_bloq}")
     if total_env > 0:
-        print(f"Taxa de bloqueio: {total_bloq/total_env*100:.1f}%")
-    print(f"{'='*50}\n")
+        print(f"  taxa bloqueio: {total_bloq / total_env * 100:.1f}%")
+    print(f"{'='*45}\n")
 
 
 if __name__ == '__main__':
-    input(f"Servidor em {HOST}:{PORT}? Prima ENTER para comecar...")
+    input(f"servidor em {HOST}:{PORT}? enter para comecar: ")
     correr_teste(5)
