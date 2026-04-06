@@ -1,0 +1,6 @@
+#server
+HOST = '127.0.0.1'
+PORT = 5555
+BUFFER_SIZE = 1024
+MAX_CLIENTS = 10
+INCIDENTS_FILE = 'incidents.json'
