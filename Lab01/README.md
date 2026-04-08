@@ -32,14 +32,12 @@ Lab01/
 
 ## Como executar
 
-Precisa de Python 3.7+. Nao e preciso instalar nada, usa so a stdlib.
-
 **Terminal 1 - servidor:**
 ```
 python server.py
 ```
 
-**Terminal 2 (e seguintes) - clientes:**
+**Terminal 2 e seguir - clientes:**
 ```
 python client.py
 ```
@@ -53,16 +51,16 @@ Ao ligar pede username. Depois e so escrever mensagens.
 
 ## Como funciona a deteção GDPR
 
-O modulo `gdpr_detector.py` usa expressoes regulares para encontrar dados pessoais nas mensagens. Quando encontra algum, o servidor bloqueia a mensagem e manda um aviso ao cliente. O incidente fica guardado em `incidents.json` com o username, timestamp e o que foi encontrado.
+O modulo `gdpr_detector.py` usa expressoes regulares para encontrar dados pessoais nas mensagens. quando encontra algum o servidor bloqueia a mensagem e manda um aviso ao cliente, O incidente fica guardado em `incidents.json` com o username e o timestamp e o que foi encontrado.
 
 Dados que deteta:
 
-- emails (ex: joao@gmail.com)
-- telefones portugueses e internacionais (ex: 912345678, +351 912345678)
-- enderecos IPv4 (ex: 192.168.1.1)
-- nomes proprios com 2+ palavras (ex: João Silva)
-- datas de nascimento DD/MM/YYYY ou YYYY-MM-DD
-- numeros de cartao de credito com 16 digitos - validados pelo algoritmo de Luhn
+- emails ex: joao@gmail.com
+- telefones ex: 912345678, +351 912345678
+- enderecos IPv4 ex: 192.168.1.1
+- nomes com 2+ palavras ex: João Silva
+- datas de nascimento ex: DD/MM/YYYY ou YYYY-MM-DD
+- numeros de cartao de credito - validados pelo algoritmo de luhn
 
 Exemplo de mensagem bloqueada:
 ```
@@ -99,21 +97,21 @@ print(incidentes)
 
 ## Teste de stress
 
-Com o servidor a correr, noutro terminal:
+Com o servidor a correr em outro terminal:
 
 ```
 python test_stress.py
 ```
 
-Cria 5 clientes em simultaneo. Cada um envia 3 mensagens (1 normal + 2 com dados pessoais) e no final aparece um relatorio com quantas foram bloqueadas.
+cria 5 clientes em simultaneo e cada um envia 3 mensagens ex: 1 normal + 2 com dados pessoais e no final aparece um relatorio com quantas foram bloqueadas.
 
 ---
 
 ## Erros comuns
 
-`Address already in use` — porta 5555 ocupada, fechar o outro terminal ou mudar PORT no config.py
+`Address already in use` — porta 5555 ocupada e ao fechar o outro terminal ou mudar PORT no config.py
 
-`Connection refused` — servidor nao esta a correr, comecar pelo `python server.py`
+`Connection refused` — servidor nao esta a correr tente comecar pelo `python server.py`
 
 ---
 
