@@ -126,7 +126,6 @@ class ChatServer:
             logger.warning(f"utilizador '{destino}' nao esta ligado")
 
     def broadcast(self, msg, excluir=None):
-        # enviar para todos os clientes exceto o remetente
         msg_bytes = f"{msg}\n".encode('utf-8')
         with self.lock:
             for s, _ in self.clientes:
@@ -134,7 +133,7 @@ class ChatServer:
                     try:
                         s.send(msg_bytes)
                     except:
-                        pass
+                        pass  # ignora se o cliente ja desligou entretanto
 
     def parar(self):
         self.ativo = False

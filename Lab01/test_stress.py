@@ -87,9 +87,12 @@ def correr_teste(n=5):
     for c in clientes:
         c.join()
 
-    # relatorio final
-    total_bloq = sum(c.bloqueadas for c in clientes)
-    total_env = sum(c.enviadas for c in clientes)
+    # contar totais
+    total_bloq = 0
+    total_env = 0
+    for c in clientes:
+        total_bloq = total_bloq + c.bloqueadas
+        total_env = total_env + c.enviadas
 
     print(f"\n{'='*45}")
     print("relatorio final:")
