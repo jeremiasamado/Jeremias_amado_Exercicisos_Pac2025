@@ -1,60 +1,10 @@
 import json
 import time
-from html.parser import HTMLParser
-from urllib.error import HTTPError, URLError
 from urllib.parse import urldefrag, urljoin, urlparse
-from urllib.request import Request, urlopen
 from urllib.robotparser import RobotFileParser
 
-
-class PageParser(HTMLParser):
-
-    def __init__(self):
-        super().__init__()
-        self.links = []
-        self.titulo = None
-        self.h1 = []
-        self.h2 = []
-        self.p = []
-        self._capture = None
-        self._capture_buf = []
-
-    def handle_starttag(self, tag, attrs):
-        if tag == 'a':
-            href = None
-            for k, v in attrs:
-                if k == 'href':
-                    href = v
-                    break
-            if href:
-                self.links.append(href)
-            return
-
-        if tag in ('title', 'h1', 'h2', 'p'):
-            self._capture = tag
-            self._capture_buf = []
-
-    def handle_data(self, data):
-        if self._capture:
-            self._capture_buf.append(data)
-
-    def handle_endtag(self, tag):
-        if not self._capture or tag != self._capture:
-            return
-
-        texto = ''.join(self._capture_buf).strip()
-        if texto:
-            if tag == 'title' and self.titulo is None:
-                self.titulo = texto
-            elif tag == 'h1':
-                self.h1.append(texto)
-            elif tag == 'h2':
-                self.h2.append(texto)
-            elif tag == 'p':
-                self.p.append(texto)
-
-        self._capture = None
-        self._capture_buf = []
+import requests
+from bs4 import BeautifulSoup
 
 
 def _normalize_url(url):
@@ -83,21 +33,24 @@ def _same_domain(url_a, url_b):
 
 def _load_robots(url_inicial, user_agent, timeout_s):
     robots_url = urljoin(url_inicial, '/robots.txt')
-    req = Request(robots_url, headers={'User-Agent': user_agent})
-
     try:
-        with urlopen(req, timeout=timeout_s) as resp:
-            content = resp.read().decode('utf-8', errors='ignore')
-    except HTTPError as e:
-        if e.code == 404:
-            return None
-        raise
-    except URLError:
-        raise
+        resp = requests.get(
+            robots_url,
+            headers={'User-Agent': user_agent},
+            timeout=timeout_s,
+        )
+    except requests.RequestException:
+        return None
+
+    if resp.status_code == 404:
+        return None
+
+    if resp.status_code < 200 or resp.status_code >= 300:
+        return None
 
     rp = RobotFileParser()
     rp.set_url(robots_url)
-    rp.parse(content.splitlines())
+    rp.parse(resp.text.splitlines())
     return rp
 
 
@@ -131,36 +84,38 @@ def crawler(
         if not url or url in visitadas:
             continue
 
-        if mesmo_dominio and not _same_domain(url_inicial, url):
-            continue
-
         if robots and not robots.can_fetch(user_agent, url):
             visitadas.add(url)
             continue
 
-        req = Request(url, headers={'User-Agent': user_agent})
-
         try:
-            with urlopen(req, timeout=timeout_s) as resp:
-                content_type = resp.headers.get('Content-Type', '')
-                if 'text/html' not in content_type:
-                    visitadas.add(url)
-                    continue
-                html = resp.read().decode('utf-8', errors='ignore')
-        except (HTTPError, URLError):
+            resp = requests.get(
+                url,
+                headers={'User-Agent': user_agent},
+                timeout=timeout_s,
+            )
+        except requests.RequestException:
             visitadas.add(url)
             continue
 
-        parser = PageParser()
-        try:
-            parser.feed(html)
-        except Exception:
+        content_type = resp.headers.get('Content-Type', '')
+        if 'text/html' not in content_type:
             visitadas.add(url)
             continue
+
+        if resp.status_code < 200 or resp.status_code >= 300:
+            visitadas.add(url)
+            continue
+
+        soup = BeautifulSoup(resp.text, 'html.parser')
+
+        titulo = ''
+        if soup.title and soup.title.get_text(strip=True):
+            titulo = soup.title.get_text(strip=True)
 
         links_abs = []
-        for href in parser.links:
-            href = href.strip() if href else ''
+        for a in soup.find_all('a', href=True):
+            href = (a.get('href') or '').strip()
             if not href or href.startswith('#'):
                 continue
             if href.startswith(('mailto:', 'javascript:', 'tel:')):
@@ -170,27 +125,26 @@ def crawler(
             if not abs_url:
                 continue
 
-            if mesmo_dominio and not _same_domain(url_inicial, abs_url):
-                continue
-
             if abs_url not in links_abs:
                 links_abs.append(abs_url)
 
         item = {
             'url': url,
-            'titulo': parser.titulo or '',
+            'titulo': titulo,
             'links': links_abs,
         }
 
         if extrair_texto:
-            item['h1'] = parser.h1
-            item['h2'] = parser.h2
-            item['p'] = parser.p
+            item['h1'] = [h.get_text(' ', strip=True) for h in soup.find_all('h1')]
+            item['h2'] = [h.get_text(' ', strip=True) for h in soup.find_all('h2')]
+            item['p'] = [p.get_text(' ', strip=True) for p in soup.find_all('p')]
 
         resultados.append(item)
         visitadas.add(url)
 
         for l in links_abs:
+            if mesmo_dominio and not _same_domain(url_inicial, l):
+                continue
             if l not in visitadas and l not in fila:
                 fila.append(l)
 

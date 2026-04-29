@@ -4,6 +4,12 @@ Objetivo: navegar por páginas web e extrair título e links, respeitando robots
 
 ## Como executar
 
+Instalar dependências:
+
+```bash
+pip install -r requirements.txt
+```
+
 ```bash
 python crawler.py https://example.com 3 --output saida.json
 ```
