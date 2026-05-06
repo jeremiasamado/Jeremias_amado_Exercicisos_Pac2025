@@ -6,53 +6,53 @@ dispositivos ativos --IP MAC--
 10.0.2.3 52:55:0a:00:02:03
 
 ---Pacotes capturados---
-1. Ether / IP / TCP 10.0.2.15:43872 > 13.107.5.93:https FA
-2. Ether / IP / TCP 13.107.5.93:https > 10.0.2.15:43872 A / Padding
-3. Ether / IP / TCP 13.107.5.93:https > 10.0.2.15:43872 FA / Padding
-4. Ether / IP / TCP 10.0.2.15:43872 > 13.107.5.93:https A
-5. Ether / IP / TCP 140.82.112.22:https > 10.0.2.15:33608 PA / Raw
-6. Ether / IP / TCP 10.0.2.15:33608 > 140.82.112.22:https A
-7. Ether / IP / TCP 10.0.2.15:33608 > 140.82.112.22:https FA
-8. Ether / IP / TCP 140.82.112.22:https > 10.0.2.15:33608 A / Padding
-9. Ether / IP / TCP 140.82.112.22:https > 10.0.2.15:33608 PA / Raw
-10. Ether / IP / TCP 140.82.112.22:https > 10.0.2.15:33608 FA / Padding
-11. Ether / IP / TCP 10.0.2.15:33608 > 140.82.112.22:https R
-12. Ether / IP / TCP 10.0.2.15:33608 > 140.82.112.22:https R
-13. Ether / IP / TCP 140.82.112.22:https > 10.0.2.15:33608 RA / Padding
-14. Ether / IP / TCP 140.82.112.22:https > 10.0.2.15:59408 PA / Raw
-15. Ether / IP / TCP 10.0.2.15:59408 > 140.82.112.22:https PA / Raw
-16. Ether / IP / TCP 140.82.112.22:https > 10.0.2.15:59408 A / Padding
-17. Ether / IP / UDP / DNS Qry b'mobile.events.data.microsoft.com.'
-18. Ether / IP / UDP / DNS Qry b'mobile.events.data.microsoft.com.'
-19. Ether / IP / UDP / DNS Qry b'mobile.events.data.microsoft.com.'
-20. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https PA / Raw
-21. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https PA / Raw
-22. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
-23. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
-24. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
-25. Ether / IP / UDP / DNS Ans b'mobile.events.data.trafficmanager.net.'
-26. Ether / IP / UDP / DNS Ans b'mobile.events.data.trafficmanager.net.'
-27. Ether / IP / UDP / DNS Ans b'mobile.events.data.trafficmanager.net.'
-28. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 PA / Raw
-29. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https A
-30. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 PA / Raw
-31. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https A
-32. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https PA / Raw
-33. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
+1. Ether / IP / TCP 10.0.2.15:52026 > 169.254.169.254:http S
+2. Ether / IP / TCP 169.254.169.254:http > 10.0.2.15:52026 RA / Padding
+3. Ether / IP / TCP 10.0.2.15:52030 > 169.254.169.254:http S
+4. Ether / IP / TCP 169.254.169.254:http > 10.0.2.15:52030 RA / Padding
+5. Ether / IP / UDP / DNS Qry b'westus-0.in.applicationinsights.azure.com.'
+6. Ether / IP / UDP / DNS Qry b'westus-0.in.applicationinsights.azure.com.'
+7. Ether / IP / UDP / DNS Ans b'westus-0.in.ai.monitor.azure.com.'
+8. Ether / IP / UDP / DNS Ans b'westus-0.in.ai.monitor.azure.com.'
+9. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https S
+10. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 SA / Padding
+11. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https A
+12. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https PA / Raw
+13. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 A / Padding
+14. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https PA / Raw
+15. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https PA / Raw
+16. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
+17. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
+18. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
+19. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 PA / Raw
+20. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https A
+21. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https PA / Raw
+22. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 A / Padding
+23. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 PA / Raw
+24. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https A
+25. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 A / Raw
+26. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https A
+27. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 A / Raw
+28. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 PA / Raw
+29. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https A
+30. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https PA / Raw
+31. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 A / Padding
+32. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 PA / Raw
+33. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https A
 34. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https PA / Raw
-35. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https PA / Raw
-36. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
-37. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
-38. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
-39. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 PA / Raw
-40. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https A
-41. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https PA / Raw
-42. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https PA / Raw
-43. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
-44. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
-45. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
-46. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 PA / Raw
-47. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https A
-48. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https PA / Raw
-49. Ether / IP / TCP 10.0.2.15:55160 > 20.42.73.24:https PA / Raw
-50. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
+35. Ether / IP / TCP 20.42.73.24:https > 10.0.2.15:55160 A / Padding
+36. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 PA / Raw
+37. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https A
+38. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 PA / Raw
+39. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https A
+40. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 PA / Raw
+41. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https A
+42. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 FA / Padding
+43. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https PA / Raw
+44. Ether / IP / TCP 10.0.2.15:34412 > 20.189.172.76:https FA
+45. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 A / Padding
+46. Ether / IP / TCP 20.189.172.76:https > 10.0.2.15:34412 A / Padding
+47. Ether / IP / TCP 140.82.114.22:https > 10.0.2.15:46754 PA / Raw
+48. Ether / IP / TCP 10.0.2.15:46754 > 140.82.114.22:https PA / Raw
+49. Ether / IP / TCP 140.82.114.22:https > 10.0.2.15:46754 A / Padding
+50. Ether / IP / UDP / DNS Qry b'main.vscode-cdn.net.'
