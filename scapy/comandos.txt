@@ -1,0 +1,26 @@
+1) entrar na pasta:
+cd /home/jeremydev/atividade_pratica1_kali
+
+2) dar permissao ao instalador:
+chmod +x instalar.sh
+
+3) instalar o ambiente:
+./instalar.sh
+
+4) ver as interfaces:
+ip -br a
+
+5) correr atividade o scan + 50 pacotes:
+sudo .venv/bin/python scapy.py --rede 192.168.1.0/24 --iface eth0
+
+6) correr com monitorizacao:
+sudo .venv/bin/python scapy.py --rede 192.168.1.0/24 --iface eth0 --monitor
+
+7) trocar a rede:
+sudo .venv/bin/python scapy.py --rede 192.168.x.0/24 --iface eth0
+
+8) resultados guardados em:
+resultados_scapy.txt
+
+uma questao para o professor
+- usei libpcap porque faz o mesmo papel do npcap no windows
