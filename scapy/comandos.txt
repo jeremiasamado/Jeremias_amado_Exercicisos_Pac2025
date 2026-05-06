@@ -24,3 +24,9 @@ resultados_scapy.txt
 
 uma questao para o professor
 - usei libpcap porque faz o mesmo papel do npcap no windows
+
+9) teste do ping do scapy:
+sudo .venv/bin/python testScapy.py
+
+10) print do teste do ping:
+mostrar o "teste scapy ok" e a resposta do ping ao 8.8.8.8
